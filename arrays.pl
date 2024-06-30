@@ -50,7 +50,7 @@ sub state_array_outside {
     @foreachloop = @HH2;
 }
 
-# This is how EPSI does it (June 2024), it is NOT the fastest
+# This is how EPSI does it (June 2024), it is significantly slower than others
 sub state_arrayref_inside {
     state $II = [qw/plants objects things other_thing more_things metadata/];
     @foreachloop = @$II;
@@ -103,4 +103,3 @@ Results:
        state_array_outside: 15.3056 wallclock secs (15.30 usr +  0.00 sys = 15.30 CPU) @ 1307189.54/s (n=20000000)
      state_arrayref_inside: 26.0376 wallclock secs (26.04 usr +  0.00 sys = 26.04 CPU) @ 768049.16/s (n=20000000)
     state_arrayref_outside: 25.4501 wallclock secs (25.42 usr +  0.03 sys = 25.45 CPU) @ 785854.62/s (n=20000000)
-
