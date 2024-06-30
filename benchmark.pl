@@ -12,25 +12,22 @@ use Readonly;
 use Time::HiRes;
 
 my $feedme;
-my $test_string = "I'm not crazy, my mother had me tested.";
 
 use constant AA => "I'm not crazy, my mother had me tested.";
+sub constant_native { $feedme = AA }
 
 use Const::Fast;
-const my $BB => $test_string;
+const my $BB => "I'm not crazy, my mother had me tested.";
+sub const_fast { $feedme = $BB }
 
 use Readonly;
-Readonly my $CC => $test_string;
+Readonly my $CC => "I'm not crazy, my mother had me tested.";
+sub constant_readonly { $feedme = $CC }
 
-die AA;
-
-my $code = {const     => \&const,
-            literal   => \&literal,
-            tglob     => \&tglob,
-            normal    => \&normal,
-            ro        => \&ro,
-            ro_simple => \&ro_simple,
-            rotie     => \&rotie,
+my $code = {
+    constant_native     => &constant_native,
+    const_fast          => &const_fast,
+    constant_readonly   => &constant_readonly,
 };
 
 timethese(20_000_000, $code);

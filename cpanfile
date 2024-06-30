@@ -1,5 +1,5 @@
-require 'Benchmark::Timer';
-require 'Const::Fast';
-require 'Dumbbench';
-require 'Readonly';
-require 'Time::HiRes';
+requires 'Benchmark::Timer';
+requires 'Const::Fast';
+requires 'Dumbbench';
+requires 'Readonly';
+requires 'Time::HiRes';
