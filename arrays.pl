@@ -11,31 +11,31 @@ use Benchmark ':hireswallclock';
 use Readonly;
 use Time::HiRes;
 
-my @foreachloop;
+my @loop;
 
-use constant EE => (qw/plants objects things other_thing more_things metadata/);
-sub constant_native_array { @foreachloop = EE }
+use constant EE => (qw/companies connection_points countries fuels sources technologies/);
+sub constant_native_array { @loop = EE }
 
 use Const::Fast;
-const my @FF => (qw/plants objects things other_thing more_things metadata/);
-sub const_fast_array { @foreachloop = @FF }
+const my @FF => (qw/companies connection_points countries fuels sources technologies/);
+sub const_fast_array { @loop = @FF }
 
 use Readonly;
-Readonly my @GG => (qw/plants objects things other_thing more_things metadata/);
-sub constant_readonly_array { @foreachloop = @FF }
+Readonly my @GG => (qw/companies connection_points countries fuels sources technologies/);
+sub constant_readonly_array { @loop = @FF }
 
 use feature 'state';
 sub state_array_inside {
     # Horrible workaround
     # See https://stackoverflow.com/questions/6702666/why-cant-we-initialize-state-arrays-hashes-in-list-context
-    #state @HH = (qw/plants objects things other_thing more_things metadata/);
+    #state @HH = (qw/companies connection_points countries fuels sources technologies/);
     state @HH;
     state $array_is_initialized;
     if (! $array_is_initialized) {
         $array_is_initialized = 1;
-        @HH = (qw/plants objects things other_thing more_things metadata/);
+        @HH = (qw/companies connection_points countries fuels sources technologies/);
     }
-    @foreachloop = @HH;
+    @loop = @HH;
 }
 
 # Workaround for the fact that you can't do list assignment initialisation of state variables
@@ -44,36 +44,52 @@ state @HH2;
 state $HH2_is_initialized;
 if (! $HH2_is_initialized) {
     $HH2_is_initialized = 1;
-    @HH2 = (qw/plants objects things other_thing more_things metadata/);
+    @HH2 = (qw/companies connection_points countries fuels sources technologies/);
 }
 sub state_array_outside {
-    @foreachloop = @HH2;
+    @loop = @HH2;
 }
 
 # This is how EPSI does it (June 2024), it is significantly slower than others
 sub state_arrayref_inside {
-    state $II = [qw/plants objects things other_thing more_things metadata/];
-    @foreachloop = @$II;
+    state $II = [qw/companies connection_points countries fuels sources technologies/];
+    @loop = @$II;
 }
 
-state $II2 = [qw/plants objects things other_thing more_things metadata/];
+state $II2 = [qw/companies connection_points countries fuels sources technologies/];
 sub state_arrayref_outside {
-    @foreachloop = @$II2;
+    @loop = @$II2;
 }
 
-our @JJ = (qw/plants objects things other_thing more_things metadata/);
+our @JJ = (qw/companies connection_points countries fuels sources technologies/);
 sub our_array {
-    @foreachloop = @JJ;
+    @loop = @JJ;
 }
 
-our $JJ2 = [qw/plants objects things other_thing more_things metadata/];
+our $JJ2 = [qw/companies connection_points countries fuels sources technologies/];
 sub our_arrayref {
-    @foreachloop = @$JJ2;
+    @loop = @$JJ2;
 }
 
 # Sanity test for correct values. TODO: Automate this check
+my $sanity = 0;
+if ($sanity) {
+  @loop = (); constant_native_array();
+  print "1 @loop\n";
+  @loop = (); const_fast_array();
+  print "2 @loop\n";
+  @loop = (); state_array_outside();
+  print "3 @loop\n";
+  @loop = (); state_arrayref_outside();
+  print "4 @loop\n";
+  @loop = (); our_arrayref();
+  print "5 @loop\n";
+  @loop = ();
+  exit;
+}
+
 #our_arrayref();
-#print "LOOP = ".Dumper(\@foreachloop); use Data::Dumper;
+#print "LOOP = ".Dumper(\@loop); use Data::Dumper;
 #__END__
 
 my $code = {
