@@ -22,7 +22,7 @@ sub const_fast_array { @loop = @FF }
 
 use Readonly;
 Readonly my @GG => (qw/companies connection_points countries fuels sources technologies/);
-sub constant_readonly_array { @loop = @FF }
+sub constant_readonly_array { @loop = @GG }
 
 use feature 'state';
 sub state_array_inside {
